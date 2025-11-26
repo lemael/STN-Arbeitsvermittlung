@@ -8,7 +8,7 @@ services:
       context: ./backend # Cherche le Dockerfile dans le dossier /backend
       dockerfile: Dockerfile
     ports:
-      - "5000:8080" # Mappe le port 8080 du conteneur au port 5000 de votre machine hôte
+      - "5054:8080" # Mappe le port 8080 du conteneur au port 5000 de votre machine hôte
     volumes:
       # Monte le dossier de code local dans le conteneur pour le rechargement à chaud (Hot Reload)
       - ./backend:/app
@@ -43,7 +43,7 @@ services:
     container_name: stn_db
     image: postgres:14-alpine # Image standard de PostgreSQL
     ports:
-      - "5432:5432"
+      - "5439:5432"
     volumes:
       - stn-db-data:/var/lib/postgresql/data # Stockage persistant des données
     environment:
