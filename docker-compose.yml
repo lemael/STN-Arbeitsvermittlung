@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  # Service Backend (API .NET)
+  backend:
+    container_name: stn_backend
+    build:
+      context: ./backend # Cherche le Dockerfile dans le dossier /backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:8080" # Mappe le port 8080 du conteneur au port 5000 de votre machine hôte
+    volumes:
+      # Monte le dossier de code local dans le conteneur pour le rechargement à chaud (Hot Reload)
+      - ./backend:/app
+    environment:
+      # Variables d'environnement pour l'API .NET
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - DB_CONNECTION_STRING=postgres://user:password@db:5432/stndb # Utilise le nom 'db' pour se connecter à la DB
+    depends_on:
+      - db # S'assure que la base de données démarre avant l'API
+
+  # Service Frontend (Application React)
+  frontend:
+    container_name: stn_frontend
+    build:
+      context: ./frontend # Cherche le Dockerfile dans le dossier /frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Mappe le port 3000 du conteneur au port 3000 de votre machine hôte
+    volumes:
+      # Monte le code local dans le conteneur, essentiel pour le rechargement React
+      - ./frontend:/app
+      # Exclut le dossier node_modules de l'hôte pour utiliser celui du conteneur
+      - /app/node_modules
+    environment:
+      # Variables d'environnement pour le frontend
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://backend:5000 # Référence le conteneur backend par son nom de service
+
+  # Service de Base de Données (PostgreSQL - Exemple)
+  db:
+    container_name: stn_db
+    image: postgres:14-alpine # Image standard de PostgreSQL
+    ports:
+      - "5432:5432"
+    volumes:
+      - stn-db-data:/var/lib/postgresql/data # Stockage persistant des données
+    environment:
+      # Configuration de la base de données
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=stndb
+
+# Définition des volumes persistants
+volumes:
+  stn-db-data:
