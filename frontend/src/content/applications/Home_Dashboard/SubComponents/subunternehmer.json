@@ -1,0 +1,20 @@
+[
+  {
+    "name": "mael fosso",
+    "company": "bauerland",
+    "email": "tchinde@gmail.com",
+    "phone": "+4917677647288",
+    "address": "Röntgenstraße 6, 58097 Essen",
+    "category": "Malerarbeiten",
+    "description": "je travaille depuis 3 an"
+  },
+  {
+    "name": "john doe",
+    "company": "doe services",
+    "email": "john@gmail.com",
+    "phone": "+4915123456789",
+    "address": "Hauptstraße 10, 10115 Berlin",
+    "category": "Elektroarbeiten",
+    "description": "experte en installations électriques"
+  }
+]

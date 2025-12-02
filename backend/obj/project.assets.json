@@ -482,19 +482,19 @@
     ]
   },
   "packageFolders": {
-    "/root/.nuget/packages/": {}
+    "/home/mael/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/app/backend.csproj",
+      "projectUniqueName": "/home/mael/Dokumente/project/stn arbeitsvermittlung/STN-Arbeitsvermittlung/backend/backend.csproj",
       "projectName": "backend",
-      "projectPath": "/app/backend.csproj",
-      "packagesPath": "/root/.nuget/packages/",
-      "outputPath": "/app/obj/",
+      "projectPath": "/home/mael/Dokumente/project/stn arbeitsvermittlung/STN-Arbeitsvermittlung/backend/backend.csproj",
+      "packagesPath": "/home/mael/.nuget/packages/",
+      "outputPath": "/home/mael/Dokumente/project/stn arbeitsvermittlung/STN-Arbeitsvermittlung/backend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/root/.nuget/NuGet/NuGet.Config"
+        "/home/mael/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -512,11 +512,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -551,7 +546,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.121/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -12,6 +12,8 @@ COPY package-lock.json .
 # Le 'package-lock.json' garantit les versions exactes pour tous
 RUN npm install
 
+# (Optionnel mais recommandé pour les problèmes de cache) Nettoyer le cache npm
+RUN npm cache clean --force
 # Copier le reste du code source
 COPY . .
 
