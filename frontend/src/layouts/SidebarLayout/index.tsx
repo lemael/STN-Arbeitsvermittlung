@@ -46,7 +46,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = ({ activePage, onNavigate }) => {
         }}
       >
         {/*  <Header /> */}
-        <Sidebar activePage={activePage} onNavigate={onNavigate!} />
+        <Sidebar />
         <Box
           sx={{
             position: "relative",

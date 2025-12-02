@@ -14,6 +14,8 @@ import Scrollbar from "../../../components/Scrollbar";
 import { SidebarContext } from "../../../contexts/SidebarContext";
 import { Logout } from "../Sidebar/Logout";
 import SidebarMenu from "../Sidebar/SidebarMenu";
+// NOUVEL IMPORT : Importation du hook du LayoutContext
+import { useLayoutContext } from "../../../contexts/LayoutContext";
 
 const SidebarWrapper = styled(Box)(({ theme }) => ({
   width: theme.sidebar.width,
@@ -25,18 +27,13 @@ const SidebarWrapper = styled(Box)(({ theme }) => ({
   paddingBottom: "68px",
 }));
 
-interface SidebarProps {
-  // activePage doit être l'un des chemins définis
-  activePage: string;
-
-  // onNavigate est une fonction qui prend un chemin et ne retourne rien
-  onNavigate: (pageName: string) => void;
-}
-const Sidebar: React.FC<SidebarProps> = ({ activePage, onNavigate }) => {
+interface SidebarProps {}
+const Sidebar: React.FC<SidebarProps> = () => {
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
-
+  // 1. Récupération des valeurs de navigation/état via le LayoutContext
+  const { activePage, onNavigate } = useLayoutContext();
   return (
     <>
       <SidebarWrapper
