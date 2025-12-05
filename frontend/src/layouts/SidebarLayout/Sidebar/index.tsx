@@ -15,6 +15,7 @@ import { SidebarContext } from "../../../contexts/SidebarContext";
 import { Logout } from "../Sidebar/Logout";
 import SidebarMenu from "../Sidebar/SidebarMenu";
 // NOUVEL IMPORT : Importation du hook du LayoutContext
+import { useInboxContext } from "../../../contexts/InboxContext";
 import { useLayoutContext } from "../../../contexts/LayoutContext";
 
 const SidebarWrapper = styled(Box)(({ theme }) => ({
@@ -29,6 +30,8 @@ const SidebarWrapper = styled(Box)(({ theme }) => ({
 
 interface SidebarProps {}
 const Sidebar: React.FC<SidebarProps> = () => {
+  // NOTE: On utilise l'InboxContext pour obtenir le nombre de notifications
+  const { notificationCount } = useInboxContext();
   const { sidebarToggle, toggleSidebar } = useContext(SidebarContext);
   const closeSidebar = () => toggleSidebar();
   const theme = useTheme();
@@ -56,7 +59,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
         <Divider
           sx={{ mt: 3, mx: 2, background: theme.colors.alpha.trueWhite[10] }}
         />
-        <SidebarMenu activePage={activePage} onNavigate={onNavigate} />
+        <SidebarMenu
+          activePage={activePage}
+          onNavigate={onNavigate}
+          notificationCount={notificationCount}
+        />
         <Divider sx={{ background: theme.colors.alpha.trueWhite[10] }} />
         <Logout />
       </SidebarWrapper>
@@ -89,7 +96,11 @@ const Sidebar: React.FC<SidebarProps> = () => {
                 background: theme.colors.alpha.trueWhite[10],
               }}
             />
-            <SidebarMenu activePage={activePage} onNavigate={onNavigate} />
+            <SidebarMenu
+              activePage={activePage}
+              onNavigate={onNavigate}
+              notificationCount={notificationCount}
+            />
             <Divider sx={{ background: theme.colors.alpha.trueWhite[10] }} />
             <Logout />
           </Scrollbar>

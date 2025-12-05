@@ -15,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useMemo, useState } from "react";
+import { useInboxContext } from "../../../contexts/InboxContext";
 import KundeFormData from "../../../Models/Kunde";
 import Betreff from "../../../types/BetreffType";
 import ProjektArt from "../../../types/ProjektArtType";
@@ -58,6 +59,7 @@ const initialFormData: KundeFormData = {
 const API_ENDPOINT = "http://localhost:5054/add-kunde";
 
 export default function KundenFormular() {
+  const { loadKundenFromApi } = useInboxContext();
   const [formData, setFormData] = useState<KundeFormData>(initialFormData);
   const [statusMessage, setStatusMessage] = useState<{
     type: "success" | "error" | "info";
@@ -85,9 +87,13 @@ export default function KundenFormular() {
       "baubeginn",
       "projektBeschreibung",
     ];
-    return requiredFields.every(
-      (field) => formData[field] && formData[field].toString().trim() !== ""
-    );
+    return requiredFields.every((field) => {
+      // CORRECTION TS2532: Extrait la valeur et utilise String() pour
+      // garantir qu'elle est traitable comme une chaîne, tout en conservant
+      // la vérification de vérité (pour exclure null/undefined/"" si la vérification de vérité échoue).
+      const value = formData[field];
+      return value && String(value).trim() !== "";
+    });
   }, [formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,6 +137,10 @@ export default function KundenFormular() {
           type: "success",
           message: "Client (Kunde) ajouté avec succès !",
         });
+        // --- LOGIQUE AJOUTÉE ICI ---
+        // 1. Ajouter le nouveau client au contexte global
+        // On utilise la date actuelle comme date de réception.
+        await loadKundenFromApi();
         setFormData(initialFormData);
       } else {
         const errorText = await response.text();

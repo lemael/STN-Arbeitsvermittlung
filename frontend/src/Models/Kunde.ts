@@ -1,5 +1,6 @@
 import Betreff from "../types/BetreffType";
 import ProjektArt from "../types/ProjektArtType";
+import Status from "../types/StatusType";
 
 interface KundeFormData {
   name: string;
@@ -8,7 +9,8 @@ interface KundeFormData {
   betreff: Betreff;
   projektArt: ProjektArt;
   baubeginn: string; // Sera envoyé comme string ISO 8601
+  erstellungsZeit?: string;
   projektBeschreibung: string;
-  // Status n'est pas inclus car il a une valeur par défaut 'Prüfphase' et est géré par le backend.
+  status?: Status; //n'est pas inclus car il a une valeur par défaut 'Prüfphase' et est géré par le backend.
 }
 export default KundeFormData;

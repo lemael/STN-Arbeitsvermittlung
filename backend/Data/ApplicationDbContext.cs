@@ -70,6 +70,11 @@ public class ApplicationDbContext : DbContext
             .HasConversion(
                 v => v.ToString(),
                 v => (Status)Enum.Parse(typeof(Status), v));
+        
+         entity.Property(e => e.ErstellungsZeit)
+            .HasColumnName("ErstellungsZeit")
+            .IsRequired()
+            .HasColumnType("timestamp");
     });
 }
 }

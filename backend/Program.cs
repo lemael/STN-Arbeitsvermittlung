@@ -13,10 +13,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+// Configure JSON serialization for Enums
+builder.Services.AddControllers()
+    .AddJsonOptions(options => // AJOUT DE LA CONFIGURATION
+    {
+        // Force la sérialisation de tous les Enums en chaînes de caractères au lieu d'entiers
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 
 // --- DÉBUT AJOUT CORS ---
 builder.Services.AddCors(options =>

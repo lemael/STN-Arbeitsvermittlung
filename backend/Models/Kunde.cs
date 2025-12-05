@@ -59,4 +59,6 @@ public class Kunde
     public string ProjektBeschreibung { get; set; }= string.Empty; // pflichtfeld
     
     public Status Status { get; set; } = Status.Prüfphase;
+
+    public DateTime ErstellungsZeit { get; set; } = DateTime.Now;
 }

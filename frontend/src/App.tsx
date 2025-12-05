@@ -7,6 +7,7 @@ import routes from "./router"; // Assurez-vous que ce fichier contient le Protec
 
 import { CssBaseline } from "@mui/material";
 import { AuthProvider } from "./auth/AuthContext";
+import { InboxProvider } from "./contexts/InboxContext";
 import { LayoutProvider } from "./contexts/LayoutContext";
 // import SidebarLayout from "./layouts/SidebarLayout"; // Plus besoin de cette importation
 
@@ -60,10 +61,12 @@ function App() {
       <AuthProvider>
         {/* 🚨 Le LayoutProvider enveloppe tout le contenu des routes pour injecter le contexte 🚨 */}
         <LayoutProvider activePage={activePage} onNavigate={onNavigate}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <CssBaseline />
-            {content}
-          </LocalizationProvider>
+          <InboxProvider>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <CssBaseline />
+              {content}
+            </LocalizationProvider>
+          </InboxProvider>
         </LayoutProvider>
       </AuthProvider>
     </ThemeProvider>
