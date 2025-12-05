@@ -109,7 +109,7 @@ const PagesHome: React.FC = () => {
           </p>
           <button
             style={styles.ctaButton}
-            onClick={() => navigate("/subunternehmer-formular")}
+            onClick={() => navigate("/kunde-formular")}
           >
             Fangen Sie jetzt mit Ihrer Suche an
           </button>
@@ -190,7 +190,7 @@ const PagesHome: React.FC = () => {
         </p>
         <button
           style={styles.ctaButton}
-          onClick={() => navigate("/subunternehmer-formular")}
+          onClick={() => navigate("/kunde-formular")}
         >
           Einen kostenlosen Beratungstermin vereinbaren
         </button>

@@ -29,7 +29,7 @@ const BoiteDeReception = Loader(
 // Pages
 const Home = Loader(lazy(() => import("./content/pages/Home/index")));
 const Subunternehmer = Loader(
-  lazy(() => import("./content/pages/Professionel/index"))
+  lazy(() => import("./content/pages/SubunternehmenAnfrage/index"))
 );
 const LoginDashboard = Loader(
   lazy(() => import("./content/pages/Login_dashboard/index"))
@@ -40,6 +40,7 @@ const SubunternehmerFormular = Loader(
 const LaufendeProjekte = Loader(
   lazy(() => import("./content/applications/LaufendeProjekte/index"))
 );
+const KundeFormular = Loader(lazy(() => import("./content/pages/Kunde/index")));
 
 const routes: RouteObject[] = [
   {
@@ -51,8 +52,8 @@ const routes: RouteObject[] = [
         element: <Home />,
       },
       {
-        path: "/subunternehmer-formular",
-        element: <Subunternehmer />,
+        path: "/kunde-formular",
+        element: <KundeFormular />,
       },
       {
         path: "login_dashboard",
