@@ -45,8 +45,8 @@ builder.Services.AddCors(options =>
                 "http://localhost:3000"                           // URL de votre frontend en DEV
             )
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); // Important si vous utilisez des cookies/auth
+            .AllowAnyMethod();
+            //.AllowCredentials(); // Important si vous utilisez des cookies/auth
         });
 
     // Politique de secours pour le test (peut être retirée en PROD finale)
