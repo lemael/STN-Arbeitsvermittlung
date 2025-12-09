@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
-using backend.Models; // Ajouté : Nécessaire pour les modèles Kunde, Betreff, ProjektArt, Status, et probablement WeatherForecast
+using backend.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json.Serialization;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure;
@@ -13,8 +13,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // --- AJOUT CRITIQUE POUR RENDER/KESTREL ---
-// Récupère la valeur du port de la variable d'environnement $PORT
-// et configure Kestrel pour écouter sur toutes les interfaces (0.0.0.0)
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrEmpty(port))
 {
@@ -26,51 +24,47 @@ if (!string.IsNullOrEmpty(port))
 // --- FIN AJOUT CRITIQUE ---
 // Configure JSON serialization for Enums
 builder.Services.AddControllers()
-    .AddJsonOptions(options => // AJOUT DE LA CONFIGURATION
+    .AddJsonOptions(options =>
     {
-        // Force la sérialisation de tous les Enums en chaînes de caractères au lieu d'entiers
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
-        // Ignorer la casse entre JSON et C#
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
-// --- DÉBUT AJOUT CORS ---
+// ------------------------------------------------------------------
+// ⭐ DÉFINITION UNIQUE ET CONSOLIDÉE DES POLITIQUES CORS
+// ------------------------------------------------------------------
 builder.Services.AddCors(options =>
 {
-    // Policy générique pour permettre l'accès depuis n'importe quelle origine. 
-    // En production, il est conseillé de spécifier l'URL exacte de votre frontend.
-    options.AddPolicy("AllowSpecificOrigin",
-        policy =>
-        {
-           // policy.WithOrigins("https://ecommerce-project-2kvd.onrender.com/")
-          policy.WithOrigins("http://localhost:3000")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
-// --- FIN AJOUT CORS ---
-// 1. Récupération de la chaîne de connexion.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-// Configuration du CORS (TRÈS IMPORTANT pour les appels depuis le frontend)
-builder.Services.AddCors(options =>
-{
+    // Politique pour la production et le développement local spécifique
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            // IMPORTANT : Remplacez "*" par l'URL de production de votre frontend (ex: https://votre-frontend.vercel.app)
-            // Laissez "*" pour les tests si vous n'êtes pas sûr du domaine.
-            policy.WithOrigins("https://stn-arbeitsvermittlung-4vtf.vercel.app/")
-            //policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins(
+                "stn-arbeitsvermittlung-4vtf.vercel.app", // URL de votre frontend en PROD
+                "http://localhost:3000"                           // URL de votre frontend en DEV
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // Important si vous utilisez des cookies/auth
+        });
+
+    // Politique de secours pour le test (peut être retirée en PROD finale)
+    options.AddPolicy("AllowAllDev",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
+// ------------------------------------------------------------------
 
 
-
+// 1. Récupération de la chaîne de connexion.
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// NOTE : Suppression de la deuxième AddCors() ici.
 
 
 // ------------------------------------------------------------------
@@ -80,7 +74,6 @@ var app = builder.Build();
 
 // =================================================================
 // ⭐️ BLOC DE MIGRATION DE BASE DE DONNÉES (EMPLACEMENT CRITIQUE)
-// Exécuté après la construction de l'hôte, avant le démarrage du serveur.
 // =================================================================
 using (var scope = app.Services.CreateScope())
 {
@@ -88,13 +81,11 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Cette ligne applique toutes les migrations en attente à la base de données.
         context.Database.Migrate(); 
         Console.WriteLine("INFO: Migrations appliquées avec succès à la base de données PostgreSQL.");
     }
     catch (Exception ex)
     {
-        // En cas d'erreur de connexion ou de migration
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "ERREUR CRITIQUE : Échec de l'application des migrations à la base de données.");
     }
@@ -107,12 +98,19 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // En environnement de développement, nous utilisons la politique 'AllowAllDev'
+    // C'est souvent plus simple pour le débuggage local.
+    app.UseCors("AllowAllDev"); 
+}
+else
+{
+    // En Production (Render), nous utilisons la politique sécurisée 'AllowFrontend'
+    app.UseCors("AllowFrontend"); 
 }
 
-app.UseHttpsRedirection();
 
-// Utilisation de la politique CORS (doit être avant UseAuthorization et MapControllers)
-app.UseCors("AllowSpecificOrigin"); 
+app.UseHttpsRedirection(); // Laissez-le ici même si Render gère le SSL
 
 var summaries = new[]
 {
@@ -136,72 +134,8 @@ app.MapGet("/weatherforecast", () =>
 
 app.MapControllers(); // Nécessaire si vous utilisez des contrôleurs (MVC/API)
 app.MapGet("/test", () => "Le backend fonctionne !");
-/*
-// Endpoint pour l'ajout d'un nouveau client (Kunde) utilisant FormData
-app.MapPost("/add-kunde-formdata", async (HttpRequest request, ApplicationDbContext db) =>
-{
-    try
-    {
-        var form = await request.ReadFormAsync();
-        
-        var name = form["Name"].ToString();
-        var email = form["Email"].ToString();
-        var telefonnummer = form["Telefonnummer"].ToString();
-        var projektBeschreibung = form["ProjektBeschreibung"].ToString();
-        
-        // Lecture des ENUMS et de la DATE (nécessite un parsing manuel)
-        var betreffString = form["Betreff"].ToString();
-        var projektArtString = form["ProjektArt"].ToString();
-        var statusString = form["Status"].ToString();
-        var baubeginnString = form["Baubeginn"].ToString();
+/* ... (Les MapPost sont inchangés) ... */
 
-        // --- Validation et Parsing ---
-        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(projektBeschreibung))
-        {
-            return Results.BadRequest("Le nom, l'email et la description du projet sont obligatoires.");
-        }
-        
-        // Parsing des ENUMS
-        if (!Enum.TryParse(betreffString, true, out Betreff betreff) ||
-            !Enum.TryParse(projektArtString, true, out ProjektArt projektArt) ||
-            !Enum.TryParse(statusString, true, out Status status))
-        {
-            return Results.BadRequest("Valeur Betreff, ProjektArt ou Status invalide.");
-        }
-
-        // Parsing de la DATE
-        if (!DateTime.TryParse(baubeginnString, out DateTime baubeginn))
-        {
-            return Results.BadRequest("Format de date de début de construction invalide.");
-        }
-        
-        // --- Création de l'objet ---
-        var kunde = new Kunde
-        {
-            Name = name,
-            Email = email,
-            Telefonnummer = telefonnummer,
-            Betreff = betreff,
-            ProjektArt = projektArt,
-            Baubeginn = baubeginn.Date(), // Hier wird der DateTime-Wert in UTC konvertiert
-            ProjektBeschreibung = projektBeschreibung,
-            Status = status
-        };
-
-        // --- Ajout et Sauvegarde ---
-        db.Kunden.Add(kunde);
-        await db.SaveChangesAsync();
-
-        return Results.Ok("Client (Kunde) ajouté avec succès !");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine(ex.Message);
-        Console.WriteLine(ex.InnerException?.Message);
-        return Results.BadRequest(ex.InnerException?.Message ?? ex.Message);
-    }
-});
-*/
 // le formular kunde utiliser par le frontend
 app.MapPost("/add-kunde", async ([FromBody] Kunde kunde, ApplicationDbContext db) =>
 {
@@ -220,7 +154,7 @@ app.MapPost("/add-kunde", async ([FromBody] Kunde kunde, ApplicationDbContext db
         return Results.BadRequest(ex.InnerException?.Message ?? ex.Message);
     }
 });
-// le formular kunde utiliser par le frontend
+// le formular subunternehmer utiliser par le frontend
 app.MapPost("/add-subunternehmer", async ([FromBody] Subunternehmer subunternehmer, ApplicationDbContext db) =>
 {
     try
