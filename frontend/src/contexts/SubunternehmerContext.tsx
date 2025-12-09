@@ -7,6 +7,7 @@ import React, {
 } from "react";
 
 import Subunternehmer from "../Models/Subunternehmer";
+import API_BASE from "../constants/API_base";
 
 // ------------------------------------------
 // DÉFINITIONS DE TYPES POUR LE MODÈLE SUBUNTERNEHMER
@@ -67,7 +68,7 @@ export const SubunternehmerProvider: React.FC<SubunternehmerProviderProps> = ({
   const [apiError, setApiError] = useState<string | null>(null);
 
   // Remplacez par l'URL réelle de l'API pour lister les sous-traitants
-  const API_URL = "http://localhost:5054/api/subunternehmer/list";
+  const API_URL = `${API_BASE}/api/subunternehmer/list`;
 
   const loadSubunternehmerFromApi = useCallback(async () => {
     setApiError(null);

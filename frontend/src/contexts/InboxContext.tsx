@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import Kunde from "../Models/Kunde";
+import API_BASE from "../constants/API_base";
 
 // Définitions de types basées sur votre structure Kunde.cs et le tableau de la boîte de réception
 
@@ -37,7 +38,7 @@ export const InboxProvider: React.FC<InboxProviderProps> = ({ children }) => {
   const [notificationCount, setNotificationCount] = useState<number>(0);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const API_URL = "http://localhost:5054/api/kunde/list"; // L'URL correcte de votre API
+  const API_URL = `${API_BASE}/api/kunde/list`; // L'URL correcte de votre API
 
   const loadKundenFromApi = async () => {
     setApiError(null); // Réinitialiser l'erreur
