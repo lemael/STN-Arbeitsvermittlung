@@ -41,7 +41,7 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                "stn-arbeitsvermittlung-4vtf.vercel.app" // URL de votre frontend en PROD
+                "https://stn-arbeitsvermittlung-4vtf.vercel.app" // URL de votre frontend en PROD
                                          // URL de votre frontend en DEV
             )
             .AllowAnyHeader()
