@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace backend.Models;
+
 
 public enum Betreff
 {
@@ -42,10 +44,10 @@ public class Kunde
 
     [Phone(ErrorMessage = "Ungültige Telefonnummer")]
     public string Telefonnummer { get; set; }= string.Empty; //optional
-
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     [Required(ErrorMessage = "Betreff ist erforderlich")]
     public Betreff Betreff { get; set; } // pflichtfeld
-
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     [Required(ErrorMessage = "ProjektArt ist erforderlich")]
     public ProjektArt ProjektArt { get; set; } // pflichtfeld
 
@@ -57,7 +59,7 @@ public class Kunde
     [Required(ErrorMessage = "ProjektBeschreibung ist erforderlich")]
     [StringLength(500, ErrorMessage = "ProjektBeschreibung darf nicht länger als 500 Zeichen sein")]
     public string ProjektBeschreibung { get; set; }= string.Empty; // pflichtfeld
-    
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public Status Status { get; set; } = Status.Prüfphase;
 
     public DateTime ErstellungsZeit { get; set; } = DateTime.Now;

@@ -141,6 +141,7 @@ export default function KundenFormular() {
         // On utilise la date actuelle comme date de réception.
         await loadKundenFromApi();
         setFormData(initialFormData);
+        console.log("newkunde :", formData);
       } else {
         const errorText = await response.text();
         setStatusMessage({
