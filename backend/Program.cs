@@ -41,8 +41,8 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(
-                "stn-arbeitsvermittlung-4vtf.vercel.app", // URL de votre frontend en PROD
-                "http://localhost:3000"                           // URL de votre frontend en DEV
+                "stn-arbeitsvermittlung-4vtf.vercel.app" // URL de votre frontend en PROD
+                                         // URL de votre frontend en DEV
             )
             .AllowAnyHeader()
             .AllowAnyMethod();
@@ -101,13 +101,13 @@ if (app.Environment.IsDevelopment())
 
     // En environnement de développement, nous utilisons la politique 'AllowAllDev'
     // C'est souvent plus simple pour le débuggage local.
-    app.UseCors("AllowAllDev"); 
+ //   app.UseCors("AllowAllDev"); 
 }
-else
-{
+
+
     // En Production (Render), nous utilisons la politique sécurisée 'AllowFrontend'
     app.UseCors("AllowFrontend"); 
-}
+
 
 
 app.UseHttpsRedirection(); // Laissez-le ici même si Render gère le SSL
