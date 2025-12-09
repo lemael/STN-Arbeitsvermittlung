@@ -9,6 +9,7 @@ import { CssBaseline } from "@mui/material";
 import { AuthProvider } from "./auth/AuthContext";
 import { InboxProvider } from "./contexts/InboxContext";
 import { LayoutProvider } from "./contexts/LayoutContext";
+import { SubunternehmerProvider } from "./contexts/SubunternehmerContext";
 // import SidebarLayout from "./layouts/SidebarLayout"; // Plus besoin de cette importation
 
 import ThemeProvider from "./theme/ThemeProvider";
@@ -62,10 +63,12 @@ function App() {
         {/* 🚨 Le LayoutProvider enveloppe tout le contenu des routes pour injecter le contexte 🚨 */}
         <LayoutProvider activePage={activePage} onNavigate={onNavigate}>
           <InboxProvider>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <CssBaseline />
-              {content}
-            </LocalizationProvider>
+            <SubunternehmerProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <CssBaseline />
+                {content}
+              </LocalizationProvider>
+            </SubunternehmerProvider>
           </InboxProvider>
         </LayoutProvider>
       </AuthProvider>

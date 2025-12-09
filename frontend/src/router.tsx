@@ -38,7 +38,12 @@ const SubunternehmerFormular = Loader(
   lazy(() => import("./content/applications/SubunternehmerFormular/index"))
 );
 const LaufendeProjekte = Loader(
-  lazy(() => import("./content/applications/LaufendeProjekte/index"))
+  lazy(() =>
+    import("./content/applications/LaufendeProjekte/index").then((module) => ({
+      // Annahme: Die Komponente im Index-File heißt 'LaufendeProjekte'
+      default: module.LaufendeProjekt,
+    }))
+  )
 );
 const KundeFormular = Loader(lazy(() => import("./content/pages/Kunde/index")));
 
@@ -117,7 +122,7 @@ const routes: RouteObject[] = [
       },
       {
         path: "laufendeProjekte",
-        element: <LaufendeProjekte />,
+        element: <LaufendeProjekte height={800} />,
       },
     ],
   },

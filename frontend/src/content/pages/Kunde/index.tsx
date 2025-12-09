@@ -20,6 +20,8 @@ import KundeFormData from "../../../Models/Kunde";
 import Betreff from "../../../types/BetreffType";
 import ProjektArt from "../../../types/ProjektArtType";
 
+import API_ENDPOINT from "../../../constants/apiEndpoint_kunde";
+
 // =================================================================
 // 1. TYPESCRIPT INTERFACES ET ENUMS (doivent correspondre à Kunde.cs)
 // =================================================================
@@ -54,9 +56,6 @@ const initialFormData: KundeFormData = {
 // =================================================================
 // 2. COMPOSANT PRINCIPAL
 // =================================================================
-
-// REMPLACER PAR VOTRE URL RENDER EN PRODUCTION
-const API_ENDPOINT = "http://localhost:5054/add-kunde";
 
 export default function KundenFormular() {
   const { loadKundenFromApi } = useInboxContext();

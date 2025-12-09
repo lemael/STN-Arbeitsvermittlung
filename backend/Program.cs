@@ -11,14 +11,28 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
 
+// --- AJOUT CRITIQUE POUR RENDER/KESTREL ---
+// Récupère la valeur du port de la variable d'environnement $PORT
+// et configure Kestrel pour écouter sur toutes les interfaces (0.0.0.0)
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+{
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+        serverOptions.ListenAnyIP(int.Parse(port));
+    });
+}
+// --- FIN AJOUT CRITIQUE ---
 // Configure JSON serialization for Enums
 builder.Services.AddControllers()
     .AddJsonOptions(options => // AJOUT DE LA CONFIGURATION
     {
         // Force la sérialisation de tous les Enums en chaînes de caractères au lieu d'entiers
         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); 
+        // Ignorer la casse entre JSON et C#
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     });
 
@@ -48,7 +62,8 @@ builder.Services.AddCors(options =>
         {
             // IMPORTANT : Remplacez "*" par l'URL de production de votre frontend (ex: https://votre-frontend.vercel.app)
             // Laissez "*" pour les tests si vous n'êtes pas sûr du domaine.
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins("https://stn-arbeitsvermittlung-4vtf.vercel.app/")
+            //policy.WithOrigins("http://localhost:3000")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
@@ -205,7 +220,24 @@ app.MapPost("/add-kunde", async ([FromBody] Kunde kunde, ApplicationDbContext db
         return Results.BadRequest(ex.InnerException?.Message ?? ex.Message);
     }
 });
+// le formular kunde utiliser par le frontend
+app.MapPost("/add-subunternehmer", async ([FromBody] Subunternehmer subunternehmer, ApplicationDbContext db) =>
+{
+    try
+    {
+        if (subunternehmer == null)
+            return Results.BadRequest("Données manquantes.");
 
+        db.Subunternehmer.Add(subunternehmer);
+        await db.SaveChangesAsync();
+
+        return Results.Ok("Service (subunternehmer) ajouté avec succès !");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.InnerException?.Message ?? ex.Message);
+    }
+});
 // Démarre l'application
 app.Run();
 
