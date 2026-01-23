@@ -39,7 +39,7 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
     "Liste des sous-traitants chargée :",
     subunternehmerList.length,
     "éléments.",
-    subunternehmerList
+    subunternehmerList,
   );
 
   /**
@@ -137,7 +137,7 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
         overflow: "hidden",
       }}
     >
-      {/* Colonne de gauche : La Liste des Sous-traitants */}
+      {/* Linke Spalte: Liste der Nachunternehmer */}
       <Box
         sx={{
           height: "100%",
@@ -150,13 +150,12 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
         }}
       >
         <Typography variant="h5" component="h3" gutterBottom align="center">
-          Liste des Sous-traitants ({subunternehmerList.length} au total)
+          Subunternehmerliste ({subunternehmerList.length} insgesamt)
         </Typography>
 
         <List disablePadding>
           {subunternehmerList.map((subunternehmer, index) => (
             <ListItem
-              // Utilisation de l'index comme clé de secours si l'ID n'est pas présent
               key={subunternehmer.id ?? index}
               disablePadding
               sx={{ mb: 1.5 }}
@@ -166,7 +165,6 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
                 sx={{
                   width: "100%",
                   cursor: "pointer",
-                  // Utilisation de l'Id réel pour le style de sélection
                   borderColor:
                     selectedSubunternehmer?.id === subunternehmer.id
                       ? "primary.main"
@@ -186,13 +184,12 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
                 }}
               >
                 <CardContent>
-                  {/* Utilisation des champs en PascalCase du modèle réel */}
                   <Typography variant="h6" component="div" noWrap>
                     {subunternehmer.firmenname} (
                     {subunternehmer.ansprechpartnername})
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Spécialité : <strong>{subunternehmer.fachgebiet}</strong>
+                    Fachgebiet: <strong>{subunternehmer.fachgebiet}</strong>
                   </Typography>
                 </CardContent>
               </Card>
@@ -201,7 +198,7 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
         </List>
       </Box>
 
-      {/* Colonne de droite : Les Détails du Sous-traitant Sélectionné */}
+      {/* Rechte Spalte: Details des ausgewählten Nachunternehmers */}
       {selectedSubunternehmer && (
         <Box
           sx={{
@@ -216,59 +213,59 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
           }}
         >
           <Typography variant="h5" gutterBottom color="primary">
-            Détails de l'entreprise {selectedSubunternehmer.firmenname}
+            Unternehmensdetails: {selectedSubunternehmer.firmenname}
           </Typography>
           <Divider sx={{ mb: 3 }} />
 
-          {/* Section Informations Générales */}
+          {/* Sektion: Kontaktinformationen */}
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Informations de Contact
+            Kontaktinformationen
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Contact :</strong>{" "}
+            <strong>Ansprechpartner:</strong>{" "}
             {selectedSubunternehmer.ansprechpartnername}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Téléphone :</strong> {selectedSubunternehmer.telefonnummer}
+            <strong>Telefon:</strong> {selectedSubunternehmer.telefonnummer}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Email :</strong> {selectedSubunternehmer.email}
+            <strong>E-Mail:</strong> {selectedSubunternehmer.email}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            <strong>Adresse :</strong> {selectedSubunternehmer.adresse}
+            <strong>Adresse:</strong> {selectedSubunternehmer.adresse}
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Section Caractéristiques de l'Entreprise */}
+          {/* Sektion: Unternehmensmerkmale */}
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Caractéristiques de l'Entreprise
+            Unternehmensmerkmale
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Forme Juridique :</strong>{" "}
+            <strong>Rechtsform:</strong>{" "}
             {selectedSubunternehmer.rechtsformDesUnternehmens}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>ID TVA (USt-IdNr) :</strong>{" "}
+            <strong>USt-IdNr.:</strong>{" "}
             {selectedSubunternehmer.umsatznsteuerIdentifikationsnummer}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Catégorie :</strong> {selectedSubunternehmer.fachgebiet}
+            <strong>Fachgebiet:</strong> {selectedSubunternehmer.fachgebiet}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Régions de travail :</strong>{" "}
+            <strong>Einsatzgebiete:</strong>{" "}
             {selectedSubunternehmer.arbeitsregionen}
           </Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
-            <strong>Employés :</strong>{" "}
+            <strong>Mitarbeiteranzahl:</strong>{" "}
             {selectedSubunternehmer.anzahlDerMitarbeiter}
           </Typography>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Section Qualifications */}
+          {/* Sektion: Qualifikationen */}
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Qualifications & Logistique
+            Qualifikationen & Logistik
           </Typography>
           <Box sx={{ p: 2, backgroundColor: "grey.100", borderRadius: 1 }}>
             <Typography
@@ -276,10 +273,10 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
               component="div"
               sx={{ fontWeight: "bold" }}
             >
-              Qualifications :
+              Qualifikationen:
             </Typography>
             <Typography variant="body2" sx={{ mb: 1 }}>
-              {selectedSubunternehmer.qualifikationen || "Non spécifié."}
+              {selectedSubunternehmer.qualifikationen || "Keine Angabe."}
             </Typography>
 
             <Typography
@@ -287,10 +284,10 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
               component="div"
               sx={{ mt: 2, fontWeight: "bold" }}
             >
-              Expérience :
+              Erfahrung:
             </Typography>
             <Typography variant="body2">
-              {selectedSubunternehmer.erfarung || "Non spécifié."}
+              {selectedSubunternehmer.erfarung || "Keine Angabe."}
             </Typography>
 
             <Typography
@@ -298,47 +295,47 @@ export function ListVonSubunternehmer({ height }: { height: number }) {
               component="div"
               sx={{ mt: 2, fontWeight: "bold" }}
             >
-              Disponibilité (date) :
+              Verfügbarkeit (Datum):
             </Typography>
             <Typography variant="body2">
-              {selectedSubunternehmer.verfügbarkeitdatum || "Non spécifié."}
+              {selectedSubunternehmer.verfügbarkeitdatum || "Nicht angegeben."}
             </Typography>
           </Box>
 
           <Divider sx={{ my: 3 }} />
 
-          {/* Section Informations Financières et Diverses */}
+          {/* Sektion: Finanzielle Informationen & Diverses */}
           <Typography variant="h6" sx={{ mb: 1 }}>
-            Informations Financières & Diverses
+            Finanzielle Informationen & Sonstiges
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Assurance :</strong>{" "}
-            {selectedSubunternehmer.versicherungsschutz || "Non spécifié."}
+            <strong>Versicherungsschutz:</strong>{" "}
+            {selectedSubunternehmer.versicherungsschutz || "Nicht angegeben."}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1 }}>
-            <strong>Banque :</strong>{" "}
-            {selectedSubunternehmer.bankverbindung || "Non spécifié."}
+            <strong>Bankverbindung:</strong>{" "}
+            {selectedSubunternehmer.bankverbindung || "Nicht angegeben."}
           </Typography>
           <Box
             sx={{ mt: 2, p: 2, border: "1px dashed grey.400", borderRadius: 1 }}
           >
             <Typography variant="subtitle2" gutterBottom>
-              Autres remarques (Sonstige) :
+              Sonstige Anmerkungen:
             </Typography>
             <Typography variant="body2">
-              {selectedSubunternehmer.sonstige || "Aucune remarque fournie."}
+              {selectedSubunternehmer.sonstige || "Keine weiteren Anmerkungen."}
             </Typography>
           </Box>
           <Box
             sx={{ mt: 2, p: 2, border: "1px dashed grey.400", borderRadius: 1 }}
           >
             <Typography variant="subtitle2" gutterBottom>
-              Jour de creation :
+              Erstellungsdatum:
             </Typography>
             <Typography variant="body2">
               {selectedSubunternehmer.erstellungsZeit
                 ? formatDate(selectedSubunternehmer.erstellungsZeit)
-                : "Aucune remarque fournie."}
+                : "Nicht verfügbar."}
             </Typography>
           </Box>
         </Box>

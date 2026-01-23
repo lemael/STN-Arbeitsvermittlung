@@ -38,17 +38,12 @@ builder.Services.AddCors(options =>
 {
     // Politique pour la production et le développement local spécifique
     options.AddPolicy("AllowFrontend",
-        policy =>
-        {
-            policy.WithOrigins(
-                "https://stn-arbeitsvermittlung-4vtf.vercel.app" // URL de votre frontend en PROD
-                                         // URL de votre frontend en DEV
-            )
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-            //.AllowCredentials(); // Important si vous utilisez des cookies/auth
-        });
-
+    policy =>
+    {
+        policy.WithOrigins("https://stn-arbeitsvermittlung-4vtf.vercel.app" )//"http://localhost:3000") // Ajoutez http:// ici
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
     // Politique de secours pour le test (peut être retirée en PROD finale)
     options.AddPolicy("AllowAllDev",
         policy =>
@@ -172,6 +167,14 @@ app.MapPost("/add-subunternehmer", async ([FromBody] Subunternehmer subunternehm
         return Results.BadRequest(ex.InnerException?.Message ?? ex.Message);
     }
 });
+// L'ordre est très important !
+app.UseRouting();
+
+// Appliquez la politique ici
+app.UseCors("AllowFrontend"); 
+
+app.UseAuthorization();
+app.MapControllers();
 // Démarre l'application
 app.Run();
 

@@ -36,7 +36,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     },
     {
       name: "boiteDeReception",
-      text: "BoiteDeReception",
+      text: "Posteingang",
       icon: EmailOutlined,
       path: "dashboards/boiteDeReception",
       badge: notificationCount, // Utilise le compteur de notifications ici

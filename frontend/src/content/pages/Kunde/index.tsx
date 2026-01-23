@@ -71,7 +71,7 @@ export default function KundenFormular() {
     // Signature corrigée: Accepte les types standards ET le type SelectChangeEvent de MUI.
     e:
       | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent<string>
+      | SelectChangeEvent<string>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -101,7 +101,7 @@ export default function KundenFormular() {
     if (!isFormValid) {
       setStatusMessage({
         type: "error",
-        message: "Veuillez remplir tous les champs obligatoires (*).",
+        message: "Bitte füllen Sie alle Pflichtfelder (*) aus.",
       });
       return;
     }
@@ -109,7 +109,7 @@ export default function KundenFormular() {
     setLoading(true);
     setStatusMessage({
       type: "info",
-      message: "Envoi des données en cours...",
+      message: "Daten werden gesendet...",
     });
 
     try {
@@ -134,32 +134,31 @@ export default function KundenFormular() {
       if (response.ok) {
         setStatusMessage({
           type: "success",
-          message: "Client (Kunde) ajouté avec succès !",
+          message: "Kunde erfolgreich hinzugefügt!",
         });
-        // --- LOGIQUE AJOUTÉE ICI ---
-        // 1. Ajouter le nouveau client au contexte global
-        // On utilise la date actuelle comme date de réception.
+
+        // --- LOGIK ---
         await loadKundenFromApi();
         setFormData(initialFormData);
-        console.log("newkunde :", formData);
+        console.log("Neuer Kunde hinzugefügt:", formData);
       } else {
         const errorText = await response.text();
         setStatusMessage({
           type: "error",
-          message: `Échec de l'ajout: ${errorText || response.statusText}`,
+          message: `Fehler beim Hinzufügen: ${errorText || response.statusText}`,
         });
       }
     } catch (error) {
-      console.error("Erreur réseau ou d'API:", error);
+      console.error("Netzwerk- oder API-Fehler:", error);
       setStatusMessage({
         type: "error",
-        message: "Erreur de connexion au serveur. Vérifiez l'URL de l'API.",
+        message:
+          "Verbindung zum Server fehlgeschlagen. Bitte überprüfen Sie die API-URL.",
       });
     } finally {
       setLoading(false);
     }
   };
-
   // =================================================================
   // 3. RENDER (Material-UI)
   // =================================================================
@@ -187,7 +186,7 @@ export default function KundenFormular() {
           gutterBottom
           sx={{ fontWeight: 700, color: "#3f51b5" }}
         >
-          Nouveau Client (Kunde) - Formulaire
+          Neuer Kunde - Formular
         </Typography>
 
         {statusMessage && (
@@ -206,7 +205,7 @@ export default function KundenFormular() {
               component="span"
               sx={{ fontWeight: "bold" }}
             >
-              {statusMessage.type === "success" ? "Succès" : "Erreur"} :
+              {statusMessage.type === "success" ? "Erfolg" : "Fehler"} :
             </Typography>{" "}
             {statusMessage.message}
           </Alert>
@@ -225,7 +224,7 @@ export default function KundenFormular() {
             <div style={{ flex: "1 1 300px" }}>
               <TextField
                 fullWidth
-                label="Nom *"
+                label="Name *"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
@@ -239,7 +238,7 @@ export default function KundenFormular() {
             <div style={{ flex: "1 1 300px" }}>
               <TextField
                 fullWidth
-                label="Email *"
+                label="E-Mail *"
                 name="email"
                 type="email"
                 value={formData.email}
@@ -254,7 +253,7 @@ export default function KundenFormular() {
             <div style={{ flex: "1 1 300px" }}>
               <TextField
                 fullWidth
-                label="Téléphone (Optionnel)"
+                label="Telefonnummer (Optional)"
                 name="telefonnummer"
                 type="tel"
                 value={formData.telefonnummer}
@@ -267,7 +266,7 @@ export default function KundenFormular() {
             <div style={{ flex: "1 1 300px" }}>
               <TextField
                 fullWidth
-                label="Date de Début de Construction (Baubeginn) *"
+                label="Baubeginn *"
                 name="baubeginn"
                 type="date"
                 value={formData.baubeginn}
@@ -288,14 +287,14 @@ export default function KundenFormular() {
                 variant="outlined"
                 color="primary"
               >
-                <InputLabel id="betreff-label">Objet (Betreff) *</InputLabel>
+                <InputLabel id="betreff-label">Betreff *</InputLabel>
                 <Select
                   labelId="betreff-label"
                   id="betreff"
                   name="betreff"
                   value={formData.betreff}
                   onChange={handleChange}
-                  label="Objet (Betreff) *"
+                  label="Betreff *"
                 >
                   {BetreffOptions.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -314,16 +313,14 @@ export default function KundenFormular() {
                 variant="outlined"
                 color="primary"
               >
-                <InputLabel id="projektArt-label">
-                  Type de Projet (ProjektArt) *
-                </InputLabel>
+                <InputLabel id="projektArt-label">Projektart *</InputLabel>
                 <Select
                   labelId="projektArt-label"
                   id="projektArt"
                   name="projektArt"
                   value={formData.projektArt}
                   onChange={handleChange}
-                  label="Type de Projet (ProjektArt) *"
+                  label="Projektart *"
                 >
                   {ProjektArtOptions.map((option) => (
                     <MenuItem key={option} value={option}>
@@ -347,7 +344,7 @@ export default function KundenFormular() {
                   gutterBottom
                   sx={{ mb: 1, color: "text.secondary", fontWeight: 500 }}
                 >
-                  Description du Projet (ProjektBeschreibung) *
+                  Projektbeschreibung *
                 </Typography>
 
                 <TextareaAutosize
@@ -357,7 +354,7 @@ export default function KundenFormular() {
                   onChange={handleChange}
                   minRows={4}
                   maxLength={500}
-                  placeholder="Décrivez votre projet en détail (max 500 caractères)..."
+                  placeholder="Beschreiben Sie Ihr Projekt im Detail (max. 500 Zeichen)..."
                   style={{
                     width: "100%",
                     padding: "12px",
@@ -372,7 +369,7 @@ export default function KundenFormular() {
                 />
 
                 <FormHelperText>
-                  {formData.projektBeschreibung.length} / 500 caractères
+                  {formData.projektBeschreibung.length} / 500 Zeichen
                 </FormHelperText>
               </FormControl>
             </div>
@@ -392,9 +389,7 @@ export default function KundenFormular() {
               }
               sx={{ py: 1.5, fontWeight: "bold" }}
             >
-              {loading
-                ? "Envoi..."
-                : "Ajouter le Client (Kunde) à la Base de Données"}
+              {loading ? "Wird gesendet..." : "Kunden zur Datenbank hinzufügen"}
             </Button>
           </Box>
         </Box>

@@ -25,7 +25,7 @@ import { formatDate, getBetreffChip, getStatusChip } from "./ServiceFunction";
 
 function ApplicationsBoiteDeReception() {
   const [selectedKunde, setSelectedKunde] = useState<KundeFormData | null>(
-    null
+    null,
   );
 
   // Fonction maintenant sans 'export default' ici
@@ -43,7 +43,7 @@ function ApplicationsBoiteDeReception() {
     "DEBUG COMPONENT: Rendu de BoiteDeReception. Clients:",
     newKunden.length,
     "Erreur API:",
-    apiError
+    apiError,
   ); // <-- LOG DE DÉBOGAGE
   const handleRowClick = (kunde: KundeFormData) => {
     setSelectedKunde(kunde);
@@ -55,7 +55,7 @@ function ApplicationsBoiteDeReception() {
   useEffect(() => {
     console.log(
       "DEBUG COMPONENT: useEffect appelé. newKunden.length:",
-      newKunden.length
+      newKunden.length,
     ); // <-- LOG DE DÉBOGAGE
     // Si la liste est vide (première connexion ou F5), on appelle l'API pour récupérer les données.
     if (newKunden.length === 0) {
@@ -93,10 +93,10 @@ function ApplicationsBoiteDeReception() {
         <TableRow>
           <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
             <Typography variant="h6" color="text.secondary">
-              Votre boîte de réception est vide.
+              Ihr Posteingang ist leer.
             </Typography>
             <Typography variant="body2" color="text.disabled">
-              Les nouveaux formulaires de clients apparaîtront ici.
+              Neue Kundenanfragen werden hier erscheinen.
             </Typography>
           </TableCell>
         </TableRow>
@@ -152,7 +152,7 @@ function ApplicationsBoiteDeReception() {
           component="h1"
           sx={{ fontWeight: 700, color: theme.palette.text.primary }}
         >
-          Boîte de Réception ({newKunden.length} Clients)
+          Posteingang ({newKunden.length} Kunden)
         </Typography>
         {notificationCount > 0 && (
           <Button
@@ -162,40 +162,40 @@ function ApplicationsBoiteDeReception() {
             onClick={markAllAsRead}
             disabled={notificationCount === 0}
           >
-            Marquer {notificationCount} comme lu
+            {notificationCount} als gelesen markieren
           </Button>
         )}
       </Box>
 
       <TableContainer component={Paper} elevation={6} sx={{ borderRadius: 2 }}>
-        <Table sx={{ minWidth: 650 }} aria-label="tableau des nouveaux clients">
+        <Table sx={{ minWidth: 650 }} aria-label="Tabelle der Neukunden">
           <TableHead sx={{ bgcolor: theme.palette.primary.light }}>
             <TableRow>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 ID
               </TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Nom / Email
+                Name / E-Mail
               </TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
                 Betreff
               </TableCell>
 
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Début Construction
+                Baubeginn
               </TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Statut
+                Status
               </TableCell>
               <TableCell sx={{ color: "white", fontWeight: "bold" }}>
-                Reçu le
+                Eingegangen am
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{tableContent()}</TableBody>
         </Table>
       </TableContainer>
-      {/* MODALE DÉTAILS DU CLIENT */}
+      {/* MODAL FÜR KUNDENDETAILS */}
       <KundeDetailModal kunde={selectedKunde} onClose={handleCloseModal} />
     </Container>
   );

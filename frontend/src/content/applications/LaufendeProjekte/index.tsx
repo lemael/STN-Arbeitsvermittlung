@@ -108,22 +108,22 @@ const COLUMNS: {
 }[] = [
   {
     id: "Debut",
-    title: "Début (Start)",
+    title: "Start (Beginn)",
     icon: <PlayCircleIcon />,
     color: "#1976d2",
-  }, // Bleu
+  }, // Blau
   {
     id: "InBearbeitung",
-    title: "En cours (In Bearbeitung)",
+    title: "In Bearbeitung",
     icon: <AccessTimeIcon />,
     color: "#ff9800",
   }, // Orange
   {
     id: "Fin",
-    title: "Terminé (Fin)",
+    title: "Abgeschlossen (Fertig)",
     icon: <CheckCircleIcon />,
     color: "#4caf50",
-  }, // Vert
+  }, // Grün
 ];
 
 export function LaufendeProjekt({ height }: { height: number }) {
@@ -207,7 +207,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
     itemId: string,
-    currentColumnId: ColumnId
+    currentColumnId: ColumnId,
   ) => {
     e.dataTransfer.setData("itemId", itemId);
     e.dataTransfer.setData("originColumnId", currentColumnId);
@@ -221,7 +221,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
 
   const handleDrop = (
     e: React.DragEvent<HTMLDivElement>,
-    targetColumnId: ColumnId
+    targetColumnId: ColumnId,
   ) => {
     e.preventDefault();
 
@@ -235,7 +235,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
     setKanbanState((prevState) => {
       // 1. Trouver l'item dans la colonne d'origine
       const itemToMove = prevState[originColumnId].find(
-        (item) => item.id === itemId
+        (item) => item.id === itemId,
       );
 
       if (!itemToMove) {
@@ -244,7 +244,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
 
       // 2. Retirer l'item de la colonne d'origine
       const newOriginColumn = prevState[originColumnId].filter(
-        (item) => item.id !== itemId
+        (item) => item.id !== itemId,
       );
 
       // 3. Ajouter l'item à la colonne cible
@@ -319,40 +319,34 @@ export function LaufendeProjekt({ height }: { height: number }) {
       }}
     >
       <Typography variant="h4" gutterBottom align="center" color="primary">
-        Projets en Cours (Laufende Projekt)
+        Laufende Projekte
       </Typography>
 
-      {/* 1. Liste Déroulante pour l'ajout de Nouveaux Projets/Clients */}
+      {/* 1. Dropdown-Menü zum Hinzufügen neuer Projekte/Kunden */}
 
-      {/* 2. Tableau Kanban (Todo Liste) - Flexbox pour les colonnes */}
+      {/* 2. Kanban-Board (Aufgabenliste) - Flexbox für Spalten */}
       <Box
         sx={{
           display: "flex",
-          // *** CLÉ 1: Empêche l'enveloppement des colonnes et force le défilement ***
           flexWrap: "nowrap",
           gap: 3,
           flexGrow: 1,
-          // *** CLÉ 2: Active le défilement horizontal ***
           overflowX: "auto",
-          // S'assure qu'il n'y a pas de hauteur minimale empêchant le scroll vertical
           minHeight: 0,
-          pb: 2, // Ajoute un peu de padding en bas pour la barre de défilement
+          pb: 2,
         }}
       >
         {COLUMNS.map((column) => (
           <Box
             key={column.id}
             sx={{
-              // *** CLÉ 3: Définit une largeur minimale pour chaque colonne ***
               minWidth: "320px",
-              // Rendement flexible pour l'espace restant, mais limité par minWidth
               flexShrink: 0,
               flexGrow: 1,
-              // Définit une largeur maximale pour éviter une colonne trop large sur de grands écrans
               maxWidth: { xs: "none", md: "calc(33.333% - 16px)" },
             }}
           >
-            {/* Colonne Droppable */}
+            {/* Droppable Spalte */}
             <Box
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, column.id)}
@@ -361,7 +355,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
                 borderRadius: 2,
                 backgroundColor: "grey.50",
                 boxShadow: 3,
-                height: "100%", // La colonne prend toute la hauteur disponible du conteneur parent (Box ci-dessus)
+                height: "100%",
                 minHeight: "200px",
                 display: "flex",
                 flexDirection: "column",
@@ -384,7 +378,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
                   column.icon as React.ReactElement,
                   {
                     sx: { color: column.color, mr: 1 },
-                  } as any
+                  } as any,
                 )}
                 <Typography
                   variant="h6"
@@ -394,13 +388,11 @@ export function LaufendeProjekt({ height }: { height: number }) {
                 </Typography>
               </Box>
 
-              {/* Conteneur des cartes défilable verticalement */}
+              {/* Vertikal scrollbarer Karten-Container */}
               <Box
                 sx={{
-                  overflowY: "auto", // Active le défilement vertical DANS la colonne
+                  overflowY: "auto",
                   flexGrow: 1,
-                  // Laisse les styles de la barre de défilement par défaut pour le défilement vertical
-                  // J'ai retiré les styles pour masquer la scrollbar afin qu'elle soit visible
                 }}
               >
                 {kanbanState[column.id].length === 0 ? (
@@ -410,7 +402,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
                     align="center"
                     sx={{ mt: 2, p: 2 }}
                   >
-                    Glissez-déposez hier (Zone de Dépôt)
+                    Hierher ziehen (Ablegebereich)
                   </Typography>
                 ) : (
                   kanbanState[column.id].map((item) => (
@@ -437,7 +429,7 @@ export function LaufendeProjekt({ height }: { height: number }) {
                           {item.name}
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Type de Projet: {item.projektArt}
+                          Projektart: {item.projektArt}
                         </Typography>
                       </CardContent>
                     </Card>
